@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday Vinny! 💕</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <audio id="bgMusic" autoplay loop preload="auto">
+    <audio id="bgMusic" loop preload="auto">
         <source src="./music/w2e.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -208,10 +208,10 @@
     <div id="welcomeOverlay" class="welcome-overlay">
         <div class="welcome-content">
             <div class="text-6xl mb-4">🎂</div>
-            <h1 class="text-4xl font-bold rainbow-text mb-4">Selamat Datang!</h1>
-            <p class="text-lg text-gray-700 mb-6">Klik tombol di bawah untuk memulai perayaan ulang tahun Vinny dengan musik! 🎵</p>
+            <h1 class="text-4xl font-bold rainbow-text mb-4">Welcome!!</h1>
+            <p class="text-lg text-gray-700 mb-6">Klik tombol di bawah untuk memulai!</p>
             <button id="startButton" class="play-button">
-                🎵 Mulai Perayaan!
+                🎵 Mulai!
                 <!-- Music Control Button -->
 <button id="musicControl" class="music-control" style="display: none;" title="Play Music">
     🎵
@@ -286,7 +286,7 @@
                 </div>
                 
                 <div class="text-center">
-                    <p class="text-purple-700 text-lg mb-4">🎵 Dengan cinta dari Revan 🎵</p>
+                    <p class="text-purple-700 text-lg mb-4">🎵 With dari Revan 🎵</p>
                     <div class="flex justify-center space-x-2">
                         <span class="music-note text-2xl">🎵</span>
                         <span class="music-note text-2xl" style="animation-delay: 0.5s;">🎶</span>
@@ -371,8 +371,8 @@ const bgMusic = document.getElementById('bgMusic');
         
         const chatFlow = [
             {
-                messages: [
-                    { sender: 'sanzu', text: 'Dapet tugas dari bos hari ini.', delay: 500 },
+                messages: [ 
+                    { sender: 'sanzu', text: 'Dapet tugas dari bos hari ini.', delay: 1000 },
                     { sender: 'sanzu', text: 'Khusus buat kamu.', delay: 1200 },
                     { sender: 'sanzu', text: 'Gue sempet mikir, kenapa juga harus gue?', delay: 2000 },
                     { sender: 'sanzu', text: 'Tapi ya... katanya ini harus disampaikan langsung.', delay: 2800 },
@@ -697,7 +697,29 @@ const bgMusic = document.getElementById('bgMusic');
         }
         
         // Initialize
-        setTimeout(startChat, 1000);
+        // Initialize - tunggu sampai welcome overlay dihilangkan
+let chatStarted = false;
+
+// Modifikasi start button handler
+// Start button handler
+startButton.addEventListener('click', function() {
+    // Hide welcome overlay
+    welcomeOverlay.classList.add('hidden');
+    
+    // Show music control
+    musicControl.style.display = 'flex';
+    
+    // Try to play music
+    playMusic();
+    
+    // Start chat setelah welcome overlay hilang
+    setTimeout(() => {
+        if (!chatStarted) {
+            chatStarted = true;
+            startChat();
+        }
+    }, 1000);
+});
     </script>
 </body>
 </html>
