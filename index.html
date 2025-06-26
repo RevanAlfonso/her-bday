@@ -5,11 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday Vinny! 💕</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <audio id="bgMusic" autoplay loop preload="auto">
+        <source src="./music/w2e.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
         }
+
+        /* Music control button */
+.music-control {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1002;
+            background: linear-gradient(135deg, #ff6b6b, #ffa8a8);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .music-control:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .music-control.playing {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Welcome overlay */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 238, 248, 0.95), rgba(240, 248, 255, 0.95));
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        
+        .welcome-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .welcome-content {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 90vw;
+        }
+        
+        .play-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 15px 30px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-size: 18px;
+        }
+        
+        .play-button:hover {
+            transform: translateY(-2px);
+        }
+        
+
+
         
         .typing-animation {
             opacity: 0;
@@ -112,6 +204,21 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-pink-50 via-purple-50 to-pink-100 min-h-screen">
+    <!-- Welcome Overlay -->
+    <div id="welcomeOverlay" class="welcome-overlay">
+        <div class="welcome-content">
+            <div class="text-6xl mb-4">🎂</div>
+            <h1 class="text-4xl font-bold rainbow-text mb-4">Selamat Datang!</h1>
+            <p class="text-lg text-gray-700 mb-6">Klik tombol di bawah untuk memulai perayaan ulang tahun Vinny dengan musik! 🎵</p>
+            <button id="startButton" class="play-button">
+                🎵 Mulai Perayaan!
+                <!-- Music Control Button -->
+<button id="musicControl" class="music-control" style="display: none;" title="Play Music">
+    🎵
+</button>
+            </button>
+        </div>
+    </div>
     <!-- Chat Page -->
     <div id="chatPage" class="min-h-screen flex flex-col">
         <!-- Header -->
@@ -172,7 +279,9 @@
                             <span class="heart-float" style="animation-delay: 1s;">🌟</span>
                             <span class="heart-float" style="animation-delay: 1.5s;">🎈</span>
                         </div>
-                        <button><a href="main.html">Lanjut Ke Halaman Berikutnya</a></button>
+                        <button onclick="window.location.href='main.html'" class="bg-gradient-to-r from-pink-400 to-purple-500 text-white px-6 py-3 rounded-full font-semibold hover:transform hover:scale-105 transition-all duration-300">
+                            Lanjut Ke Halaman Berikutnya
+                        </button>
                     </div>
                 </div>
                 
@@ -189,6 +298,68 @@
     </div>
 
     <script>
+// Audio management
+const bgMusic = document.getElementById('bgMusic');
+        const musicControl = document.getElementById('musicControl');
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const startButton = document.getElementById('startButton');
+        
+        let isPlaying = false;
+        
+        // Start button handler
+        startButton.addEventListener('click', function() {
+            // Hide welcome overlay
+            welcomeOverlay.classList.add('hidden');
+            
+            // Show music control
+            musicControl.style.display = 'flex';
+            
+            // Try to play music
+            playMusic();
+            
+            // Start welcome sequence
+            setTimeout(() => {
+                showNotification('Selamat datang di pesta ulang tahun Vinny! 🎉');
+                showCelebration();
+            }, 500);
+        });
+        
+        // Music control handler
+        musicControl.addEventListener('click', function() {
+            if (isPlaying) {
+                pauseMusic();
+            } else {
+                playMusic();
+            }
+        });
+        
+        function playMusic() {
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                musicControl.textContent = '⏸️';
+                musicControl.classList.add('playing');
+                musicControl.title = 'Pause Music';
+            }).catch(error => {
+                console.log('Audio play failed:', error);
+                showNotification('Klik tombol musik untuk memutar lagu! 🎵');
+            });
+        }
+        
+        function pauseMusic() {
+            bgMusic.pause();
+            isPlaying = false;
+            musicControl.textContent = '🎵';
+            musicControl.classList.remove('playing');
+            musicControl.title = 'Play Music';
+        }
+        
+        // Handle audio events
+        bgMusic.addEventListener('ended', function() {
+            isPlaying = false;
+            musicControl.textContent = '🎵';
+            musicControl.classList.remove('playing');
+        });
+
         const chatContainer = document.getElementById('chatContainer');
         const choiceContainer = document.getElementById('choiceContainer');
         const choiceButtons = document.getElementById('choiceButtons');
