@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Vinny! 💕</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .typing-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .typing-dots {
+            animation: typing 1.5s infinite;
+        }
+        
+        @keyframes typing {
+            0%, 20% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        .chat-bubble {
+            animation: bubbleIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes bubbleIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .choice-button {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .choice-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(147, 51, 234, 0.3);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff69b4;
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        .fade-in-page {
+            animation: fadeInPage 2s ease-in-out;
+        }
+        
+        @keyframes fadeInPage {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .heart-float {
+            animation: heartFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes heartFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .music-note {
+            animation: musicNote 4s ease-in-out infinite;
+        }
+        
+        @keyframes musicNote {
+            0%, 100% { transform: rotate(-10deg) translateY(0px); }
+            50% { transform: rotate(10deg) translateY(-15px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-50 via-purple-50 to-pink-100 min-h-screen">
+    <!-- Chat Page -->
+    <div id="chatPage" class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <div class="bg-white/80 backdrop-blur-sm border-b border-pink-200 p-4 sticky top-0 z-10">
+            <div class="flex items-center space-x-3 max-w-md mx-auto">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-purple-300">
+                    <img src="./img/mainpp.jpeg" alt="Sanzu" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-sm" style="display: none;">
+                        S
+                    </div>
+                </div>
+                <div>
+                    <h2 class="font-semibold text-purple-900">Haruchiyo Sanzu</h2>
+                    <p class="text-xs text-purple-600">Online • typing...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div class="flex-1 overflow-y-auto p-4">
+            <div class="max-w-md mx-auto space-y-4" id="chatContainer">
+                <!-- Messages will be added here dynamically -->
+            </div>
+        </div>
+        
+        <!-- Choice Buttons Container -->
+        <div id="choiceContainer" class="p-4 bg-white/70 backdrop-blur-sm border-t border-pink-200" style="display: none;">
+            <div class="max-w-md mx-auto space-y-2" id="choiceButtons">
+                <!-- Choice buttons will be added here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Birthday Page -->
+    <div id="birthdayPage" class="min-h-screen hidden">
+        <div class="fade-in-page min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-pink-200 flex items-center justify-center p-4">
+            <div class="text-center max-w-2xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-4 heart-float">
+                        🎉 PINGNI 🎉
+                    </h1>
+                    <h2 class="text-3xl md:text-4xl font-semibold text-purple-800 mb-6">
+                        SWEET SEVENTEEN! 💕
+                    </h2>
+                </div>
+                
+                <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-pink-200 mb-8">
+                    <div class="space-y-6 text-purple-800">
+                        <p class="text-lg leading-relaxed">
+                            🌸 Dari Rengpan 🌸
+                        </p>
+                        <p class="text-base leading-relaxed">
+                            Happy birthday, Honey. Semoga hari ini jadi awal dari banyak hal baik yang datang ke hidupmu. You’ve come so far, and I’m so proud of you, always.
+                        </p>
+                        <div class="flex items-center justify-center space-x-4 text-2xl">
+                            <span class="heart-float">💖</span>
+                            <span class="heart-float" style="animation-delay: 0.5s;">🎂</span>
+                            <span class="heart-float" style="animation-delay: 1s;">🌟</span>
+                            <span class="heart-float" style="animation-delay: 1.5s;">🎈</span>
+                        </div>
+                        <button><a href="main.html">Lanjut Ke Halaman Berikutnya</a></button>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <p class="text-purple-700 text-lg mb-4">🎵 Dengan cinta dari Revan 🎵</p>
+                    <div class="flex justify-center space-x-2">
+                        <span class="music-note text-2xl">🎵</span>
+                        <span class="music-note text-2xl" style="animation-delay: 0.5s;">🎶</span>
+                        <span class="music-note text-2xl" style="animation-delay: 1s;">🎵</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const choiceContainer = document.getElementById('choiceContainer');
+        const choiceButtons = document.getElementById('choiceButtons');
+        const chatPage = document.getElementById('chatPage');
+        const birthdayPage = document.getElementById('birthdayPage');
+        
+        let messageIndex = 0;
+        let currentStep = 0;
+        
+        const chatFlow = [
+            {
+                messages: [
+                    { sender: 'sanzu', text: 'Dapet tugas dari bos hari ini.', delay: 500 },
+                    { sender: 'sanzu', text: 'Khusus buat kamu.', delay: 1200 },
+                    { sender: 'sanzu', text: 'Gue sempet mikir, kenapa juga harus gue?', delay: 2000 },
+                    { sender: 'sanzu', text: 'Tapi ya... katanya ini harus disampaikan langsung.', delay: 2800 },
+                    { sender: 'sanzu', text: 'Vinny.', delay: 3600 },
+                    { sender: 'sanzu', text: 'Ulang tahun kamu, ya?', delay: 4200 },
+                    { sender: 'sanzu', text: '...selamat ulang tahun.', delay: 5000 }
+                ],
+                choices: [
+                    { text: 'Eh, Betulan Ke ni?', response: 'choice1' },
+                    { text: 'Makasih ya sanzu', response: 'choice2' }
+                ]
+            },
+            {
+                choice1: [
+                    { sender: 'sanzu', text: 'Gue gak jago ngomong beginian.', delay: 600 },
+                    { sender: 'sanzu', text: 'Tapi kalo boleh jujur — kamu itu tipe yang gampang diingat.', delay: 1400 },
+                    { sender: 'sanzu', text: 'Mau tau kenapa?', delay: 2200 }
+                ],
+                choice2: [
+                    { sender: 'sanzu', text: 'Gue gak jago ngomong beginian.', delay: 600 },
+                    { sender: 'sanzu', text: 'Tapi kalo boleh jujur — kamu itu tipe yang gampang diingat.', delay: 1400 },
+                    { sender: 'sanzu', text: 'Entah kenapa...', delay: 2200 }
+                ],
+                choices: [
+                    { text: 'Diingat kenapa? 😏', response: 'continue1' },
+                    { text: 'Iyeke tu? 🤨', response: 'continue2' }
+                ]
+            },
+            {
+                continue1: [
+                    { sender: 'sanzu', text: 'Entah karena caramu ngomong.', delay: 600 },
+                    { sender: 'sanzu', text: 'Atau karena kamu terlalu nyaman buat dilupain.', delay: 1300 },
+                    { sender: 'sanzu', text: 'Tapi ya... lo bukan buat gue, kan?', delay: 2100 },
+                    { sender: 'sanzu', text: 'Bos udah pesen dari awal:', delay: 2800 },
+                    { sender: 'sanzu', text: '"Khusus hari ini, Vinny harus senyum duluan."', delay: 3600 }
+                ],
+                continue2: [
+                    { sender: 'sanzu', text: 'Serius lah.', delay: 600 },
+                    { sender: 'sanzu', text: 'Entah karena caramu ngomong.', delay: 1100 },
+                    { sender: 'sanzu', text: 'Atau karena kamu terlalu nyaman buat dilupain.', delay: 1800 },
+                    { sender: 'sanzu', text: 'Tapi ya... lo bukan buat gue, kan?', delay: 2600 },
+                    { sender: 'sanzu', text: 'Bos udah pesen dari awal:', delay: 3200 },
+                    { sender: 'sanzu', text: '"Khusus hari ini, Vinny harus senyum duluan."', delay: 4000 }
+                ],
+                choices: [
+                    { text: 'Sapehal tu "Bos"?', response: 'reveal' },
+                    { text: 'Kok kayak ada yang nyuruh? 😄', response: 'reveal' }
+                ]
+            },
+            {
+                reveal: [
+                    { sender: 'sanzu', text: 'Jadi… tugas gue selesai.', delay: 600 },
+                    { sender: 'sanzu', text: 'Tapi, kalau lo penasaran...', delay: 1300 },
+                    { sender: 'sanzu', text: 'iya.', delay: 2000 },
+                    { sender: 'sanzu', text: 'Lo manis banget hari ini.', delay: 2800 },
+                    { sender: 'sanzu', text: 'Dan "bos" yang gue maksud...', delay: 3600 },
+                    { sender: 'sanzu', text: 'Heavenly Emperor yang nonchalant nan Sigma.', delay: 4400 },
+                    { sender: 'sanzu', text: 'King Repan.', delay: 5200 }
+                ],
+                choices: [
+                    { text: 'Alamak!', response: 'final' },
+                    { text: 'Siapa Sangka!', response: 'final' }
+                ]
+            }
+        ];
+        
+        function createMessage(sender, text, isLast = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `typing-animation ${isLast ? 'mb-8' : ''}`;
+            
+            if (sender === 'sanzu') {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-2 mb-4">
+                        <div class="w-8 h-8 rounded-full overflow-hidden border border-purple-300 flex-shrink-0">
+                            <img src="./img/mainpp.jpeg" alt="Sanzu" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xs font-bold" style="display: none;">
+                                S
+                            </div>
+                        </div>
+                        <div class="chat-bubble bg-purple-200 text-purple-900 px-4 py-3 rounded-2xl rounded-tl-md shadow-md max-w-xs">
+                            <p class="text-sm leading-relaxed">${text}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="flex items-start space-x-2 mb-4 justify-end">
+                        <div class="chat-bubble bg-pink-200 text-pink-900 px-4 py-3 rounded-2xl rounded-tr-md shadow-md max-w-xs">
+                            <p class="text-sm leading-relaxed">${text}</p>
+                        </div>
+                        <div class="w-8 h-8 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                            V
+                        </div>
+                    </div>
+                `;
+            }
+            
+            return messageDiv;
+        }
+        
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex items-start space-x-2 mb-4';
+            typingDiv.innerHTML = `
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-purple-300 flex-shrink-0">
+                    <img src="./img/mainpp.jpeg" alt="Sanzu" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xs font-bold" style="display: none;">
+                        S
+                    </div>
+                </div>
+                <div class="bg-purple-100 px-4 py-3 rounded-2xl rounded-tl-md shadow-md">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-purple-400 rounded-full typing-dots"></div>
+                        <div class="w-2 h-2 bg-purple-400 rounded-full typing-dots" style="animation-delay: 0.2s;"></div>
+                        <div class="w-2 h-2 bg-purple-400 rounded-full typing-dots" style="animation-delay: 0.4s;"></div>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        function displayMessage(sender, text, delay, isLast = false) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    showTypingIndicator();
+                    
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        const messageDiv = createMessage(sender, text, isLast);
+                        chatContainer.appendChild(messageDiv);
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                        resolve();
+                    }, 1500);
+                }, delay);
+            });
+        }
+        
+        function showChoices(choices) {
+            choiceButtons.innerHTML = '';
+            
+            choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = 'choice-button w-full bg-gradient-to-r from-pink-300 to-purple-300 text-purple-800 px-6 py-3 rounded-full font-medium text-sm shadow-lg border border-pink-200';
+                button.textContent = choice.text;
+                button.onclick = () => handleChoice(choice.response);
+                
+                setTimeout(() => {
+                    button.style.opacity = '0';
+                    button.style.transform = 'translateY(20px)';
+                    choiceButtons.appendChild(button);
+                    
+                    setTimeout(() => {
+                        button.style.transition = 'all 0.5s ease-out';
+                        button.style.opacity = '1';
+                        button.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 200);
+            });
+            
+            choiceContainer.style.display = 'block';
+        }
+        
+        async function handleChoice(response) {
+            const choiceButton = event.target;
+            const userChoice = choiceButton.textContent;
+            
+            // Hide choice container immediately
+            choiceContainer.style.display = 'none';
+            
+            // Add user's choice as a message first
+            const userMessage = createMessage('vinny', userChoice);
+            userMessage.style.animationDelay = '0s';
+            chatContainer.appendChild(userMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Small delay before bot responds
+            await new Promise(resolve => setTimeout(resolve, 800));
+            
+            if (response === 'final') {
+                // Show final message and transition to birthday page
+                await displayMessage('sanzu', 'Dia lagi nunggu di sebelah sana...', 500);
+                await displayMessage('sanzu', 'Siap-siap ya... 3... 2... 1... 🎁', 1800, true);
+                setTimeout(() => {
+                    // Fade to white effect
+                    const fadeOverlay = document.createElement('div');
+                    fadeOverlay.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: white;
+                        z-index: 9999;
+                        opacity: 0;
+                        transition: opacity 2s ease-in-out;
+                    `;
+                    document.body.appendChild(fadeOverlay);
+                    
+                    setTimeout(() => {
+                        fadeOverlay.style.opacity = '1';
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        createConfetti();
+                        chatPage.classList.add('hidden');
+                        birthdayPage.classList.remove('hidden');
+                        playBirthdayMusic();
+                        
+                        setTimeout(() => {
+                            fadeOverlay.style.opacity = '0';
+                            setTimeout(() => {
+                                fadeOverlay.remove();
+                            }, 2000);
+                        }, 1000);
+                    }, 2500);
+                }, 2000);
+                return;
+            }
+            
+            currentStep++;
+            const currentFlow = chatFlow[currentStep];
+            const messages = currentFlow[response];
+            
+            // Display bot messages
+            for (let i = 0; i < messages.length; i++) {
+                const msg = messages[i];
+                const isLast = i === messages.length - 1;
+                await displayMessage(msg.sender, msg.text, msg.delay, isLast);
+            }
+            
+            // Show next choices
+            if (currentFlow.choices) {
+                setTimeout(() => {
+                    showChoices(currentFlow.choices);
+                }, 600);
+            }
+        }
+        
+        function createConfetti() {
+            const colors = ['#ff69b4', '#da70d6', '#ba55d3', '#9370db', '#8a2be2'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+        
+        function playBirthdayMusic() {
+            // Create audio context for a simple birthday tune
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                const playNote = (frequency, duration, delay = 0) => {
+                    setTimeout(() => {
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                        oscillator.type = 'sine';
+                        
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + duration);
+                    }, delay);
+                };
+                
+                // Happy Birthday melody (simplified)
+                const notes = [
+                    {freq: 261.63, duration: 0.5, delay: 0},    // C
+                    {freq: 261.63, duration: 0.5, delay: 500},  // C
+                    {freq: 293.66, duration: 1, delay: 1000},   // D
+                    {freq: 261.63, duration: 1, delay: 2000},   // C
+                    {freq: 349.23, duration: 1, delay: 3000},   // F
+                    {freq: 329.63, duration: 2, delay: 4000},   // E
+                ];
+                
+                notes.forEach(note => {
+                    playNote(note.freq, note.duration, note.delay);
+                });
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+        
+        // Start the chat flow
+        async function startChat() {
+            const initialMessages = chatFlow[0].messages;
+            
+            for (let i = 0; i < initialMessages.length; i++) {
+                const msg = initialMessages[i];
+                const isLast = i === initialMessages.length - 1;
+                await displayMessage(msg.sender, msg.text, msg.delay, isLast);
+            }
+            
+            setTimeout(() => {
+                showChoices(chatFlow[0].choices);
+            }, 1000);
+        }
+        
+        // Initialize
+        setTimeout(startChat, 1000);
+    </script>
+</body>
+</html>

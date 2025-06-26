@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greeting Birthday! 🎂</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .typing-animation {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        .message-enter {
+            animation: slideUp 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #fce7f3 0%, #f3e8ff 50%, #e0e7ff 100%);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <!-- Chat Container -->
+    <div class="max-w-md mx-auto bg-white/90 backdrop-blur-sm min-h-screen shadow-xl">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-pink-300 to-purple-300 p-4 sticky top-0 z-10">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
+                    <span class="text-2xl">🎂</span>
+                </div>
+                <div>
+                    <h1 class="text-white font-semibold text-lg">Yogurt Party!</h1>
+                    <p class="text-pink-100 text-sm">11 members online</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="messagesContainer" class="p-4 pb-20 space-y-4 min-h-screen">
+            <!-- Messages will be added here dynamically -->
+        </div>
+
+        <!-- Continue Button (Hidden initially) -->
+        
+    </div>
+
+    <script>
+        const characters = [
+            {
+                name: "Haruchiyo Sanzu",
+                avatar: "<img src='./img/sanzu.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Happy birthday Vinny! Semoga hari spesialmu dipenuhi kebahagiaan~ 💖",
+                bgColor: "bg-pink-100",
+                delay: 2000
+            },
+            {
+                name: "Kenma Kozume",
+                avatar: "<img src='./img/kenma.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Selamat ulang tahun... semoga dapat banyak game baru ya 🎂✨",
+                bgColor: "bg-yellow-100",
+                delay: 2500
+            },
+            {
+                name: "Gwen Stacy",
+                avatar: "<img src='./img/gwen.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Hey Vinny! Happy birthday! Hope your day is as amazing as you are! 💕",
+                bgColor: "bg-purple-100",
+                delay: 2200
+            },
+            {
+                name: "Hermione Granger",
+                avatar: "<img src='./img/hermione.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Many happy returns, Vinny! May this year bring you wisdom and wonderful adventures! ✨",
+                bgColor: "bg-amber-100",
+                delay: 2800
+            },
+            {
+                name: "Harry Potter",
+                avatar: "<img src='./img/harryp.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Happy birthday Vinny! Wishing you a magical year ahead! 🎉⚡",
+                bgColor: "bg-red-100",
+                delay: 2300
+            },
+            {
+                name: "Miles Morales",
+                avatar: "<img src='./img/miles.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Yo Vinny! Happy birthday! Keep being awesome! 🎂🎈",
+                bgColor: "bg-blue-100",
+                delay: 2400
+            },
+            {
+                name: "Lana Del Rey",
+                avatar: "<img src='./img/lana.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Happy birthday beautiful soul... may your dreams bloom like flowers 🌸💫",
+                bgColor: "bg-rose-100",
+                delay: 3000
+            },
+            {
+                name: "Ariana Grande",
+                avatar: "<img src='./img/ariana.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Happy birthday gorgeous! Sending you all my love and positive vibes! 💕✨",
+                bgColor: "bg-pink-100",
+                delay: 2600
+            },
+            {
+                name: "Sabrina Carpenter",
+                avatar: "<img src='./img/sabrina.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Happy birthday Vinny! Hope your special day is filled with music and laughter! 🎶💖",
+                bgColor: "bg-purple-100",
+                delay: 2700
+            },
+            {
+                name: "Christian",
+                avatar: "<img src='./img/chris.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Happy birthday Vinny! Rock on and keep shining bright! 🔥🎂",
+                bgColor: "bg-gray-100",
+                delay: 2400
+            },
+            {
+                name: "Frank Ocean",
+                avatar: "<img src='./img/frank.jpeg' class='rounded-full' alt='Profile Picture'>",
+                message: "Happy birthday, Vinny. Hope today feels soft and still — like your favorite song on a long drive.",
+                bgColor: "bg-gradient-to-r from-pink-200 to-red-200",
+                delay: 3500
+            }
+        ];
+
+        let messageIndex = 0;
+        const messagesContainer = document.getElementById('messagesContainer');
+
+        function createTypingIndicator(character) {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'flex items-start space-x-3 typing-message';
+            typingDiv.innerHTML = `
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-md ${character.bgColor}">
+                    ${character.avatar}
+                </div>
+                <div class="flex-1">
+                    <div class="text-sm font-medium text-gray-600 mb-1">${character.name}</div>
+                    <div class="bg-gray-200 rounded-2xl px-4 py-2 max-w-xs">
+                        <div class="flex space-x-1">
+                            <div class="w-2 h-2 bg-gray-400 rounded-full typing-animation"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full typing-animation" style="animation-delay: 0.2s;"></div>
+                            <div class="w-2 h-2 bg-gray-400 rounded-full typing-animation" style="animation-delay: 0.4s;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return typingDiv;
+        }
+
+        function createMessage(character) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex items-start space-x-3 message-enter';
+            messageDiv.innerHTML = `
+                <div class="w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-md ${character.bgColor}">
+                    ${character.avatar}
+                </div>
+                <div class="flex-1">
+                    <div class="text-sm font-medium text-gray-600 mb-1">${character.name}</div>
+                    <div class="${character.bgColor} rounded-2xl px-4 py-3 max-w-xs shadow-sm">
+                        <p class="text-gray-800 text-sm leading-relaxed">${character.message}</p>
+                    </div>
+                    <div class="text-xs text-gray-400 mt-1">${new Date().toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'})}</div>
+                </div>
+            `;
+            return messageDiv;
+        }
+
+        function showNextMessage() {
+            if (messageIndex >= characters.length) {
+                // Show continue button after all messages
+                setTimeout(() => {
+                    document.getElementById('continueBtn').classList.remove('hidden');
+                }, 1000);
+                return;
+            }
+
+            const character = characters[messageIndex];
+            
+            // Show typing indicator
+            const typingIndicator = createTypingIndicator(character);
+            messagesContainer.appendChild(typingIndicator);
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Replace typing indicator with actual message after delay
+            setTimeout(() => {
+                messagesContainer.removeChild(typingIndicator);
+                const message = createMessage(character);
+                messagesContainer.appendChild(message);
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                messageIndex++;
+                
+                // Show next message
+                setTimeout(showNextMessage, character.delay);
+            }, 1500);
+        }
+
+        function showContinueOptions() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Ulang Tahun!</h2>
+                        <p class="text-gray-600 mb-6">Semoga hari spesialmu dipenuhi kebahagiaan dan cinta!</p>
+                        <div class="space-y-3">
+                            <button onclick="restartChat()" class="w-full bg-gradient-to-r from-pink-400 to-purple-400 text-white py-3 rounded-2xl font-medium hover:shadow-lg transition-all">
+                                🔄 Ulangi Pesan
+                            </button>
+                            <button onclick="closeModal()" class="w-full bg-gray-100 text-gray-700 py-3 rounded-2xl font-medium hover:bg-gray-200 transition-all">
+                                💝 Simpan Kenangan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function restartChat() {
+            messageIndex = 0;
+            messagesContainer.innerHTML = '';
+            document.getElementById('continueBtn').classList.add('hidden');
+            document.querySelector('.fixed.inset-0').remove();
+            setTimeout(showNextMessage, 1000);
+        }
+
+        function closeModal() {
+            document.querySelector('.fixed.inset-0').remove();
+        }
+
+        // Start the chat sequence
+        setTimeout(showNextMessage, 1500);
+        
+        // Add welcome message
+        const welcomeDiv = document.createElement('div');
+        welcomeDiv.className = 'text-center py-8';
+        welcomeDiv.innerHTML = `
+            <div class="text-6xl mb-4">🎂</div>
+            <h2 class="text-2xl font-bold text-gray-700 mb-2">Greeting Birthday!</h2>
+            <p class="text-gray-500">There is a many message</p>
+        `;
+        messagesContainer.appendChild(welcomeDiv);
+    </script>
+</body>
+</html>

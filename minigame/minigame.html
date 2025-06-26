@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Cake Builder 🎂</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #fd79a8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow 3s ease-in-out infinite;
+        }
+
+        @keyframes rainbow {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(180deg); }
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .cake-canvas {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            min-height: 500px;
+        }
+
+        .cake-base {
+            position: relative;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cake-layer {
+            border-radius: 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #8B4513;
+        }
+
+        .cake-layer:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .layer-1 { width: 200px; height: 60px; }
+        .layer-2 { width: 150px; height: 50px; }
+        .layer-3 { width: 100px; height: 40px; }
+
+        .toolbox {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .tool-section {
+            margin-bottom: 25px;
+        }
+
+        .tool-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .color-grid, .decoration-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover, .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .decoration-item {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .decoration-item:hover {
+            background: #e0e0e0;
+            transform: scale(1.1);
+        }
+
+        .decoration-item.selected {
+            border-color: #ff6b6b;
+            background: #ffe0e0;
+        }
+
+        .placed-decoration {
+            position: absolute;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .placed-decoration:hover {
+            transform: scale(1.2);
+        }
+
+        .candle {
+            position: absolute;
+            width: 8px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ff6b6b, #ffa500);
+            border-radius: 4px;
+            top: -45px;
+        }
+
+        .candle::before {
+            content: '🔥';
+            position: absolute;
+            top: -20px;
+            left: -8px;
+            font-size: 1rem;
+            animation: flicker 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.8; transform: scale(0.95); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #96ceb4, #ffeaa7);
+            color: #333;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translateX(400px);
+            transition: all 0.5s ease;
+            z-index: 1000;
+        }
+
+        .message.show {
+            transform: translateX(0);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear infinite;
+            z-index: 999;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .cake-canvas {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎂 Birthday Cake Builder 🎂</h1>
+            <p class="subtitle">Buat kue ulang tahun impian kamu! Drag & drop decorasi untuk membuat masterpiece! ✨</p>
+        </div>
+
+        <div class="game-area">
+            <div class="cake-canvas" id="cakeCanvas">
+                <div class="cake-base" id="cakeBase">
+                    <div class="cake-layer layer-3" data-layer="3" style="background: #8B4513;"></div>
+                    <div class="cake-layer layer-2" data-layer="2" style="background: #8B4513;"></div>
+                    <div class="cake-layer layer-1" data-layer="1" style="background: #8B4513;"></div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="addCandles()">🕯️ Tambah Lilin</button>
+                    <button class="btn btn-secondary" onclick="clearCake()">🗑️ Reset Kue</button>
+                    <button class="btn btn-primary" onclick="saveCake()">📸 Simpan Kue</button>
+                    <button class="btn btn-secondary" onclick="celebrateCake()">🎉 Rayakan!</button>
+                </div>
+            </div>
+
+            <div class="toolbox">
+                <div class="tool-section">
+                    <div class="tool-title">🎨 Warna Kue</div>
+                    <div class="color-grid">
+                        <div class="color-option" style="background: #8B4513;" onclick="changeLayerColor('#8B4513')"></div>
+                        <div class="color-option" style="background: #DEB887;" onclick="changeLayerColor('#DEB887')"></div>
+                        <div class="color-option" style="background: #FFB6C1;" onclick="changeLayerColor('#FFB6C1')"></div>
+                        <div class="color-option" style="background: #98FB98;" onclick="changeLayerColor('#98FB98')"></div>
+                        <div class="color-option" style="background: #87CEEB;" onclick="changeLayerColor('#87CEEB')"></div>
+                        <div class="color-option" style="background: #DDA0DD;" onclick="changeLayerColor('#DDA0DD')"></div>
+                        <div class="color-option" style="background: #F0E68C;" onclick="changeLayerColor('#F0E68C')"></div>
+                        <div class="color-option" style="background: #FFA07A;" onclick="changeLayerColor('#FFA07A')"></div>
+                    </div>
+                </div>
+
+                <div class="tool-section">
+                    <div class="tool-title">🍓 Dekorasi</div>
+                    <div class="decoration-grid">
+                        <div class="decoration-item" onclick="selectDecoration('🍓')">🍓</div>
+                        <div class="decoration-item" onclick="selectDecoration('🍒')">🍒</div>
+                        <div class="decoration-item" onclick="selectDecoration('🫐')">🫐</div>
+                        <div class="decoration-item" onclick="selectDecoration('🥝')">🥝</div>
+                        <div class="decoration-item" onclick="selectDecoration('🍫')">🍫</div>
+                        <div class="decoration-item" onclick="selectDecoration('🍬')">🍬</div>
+                        <div class="decoration-item" onclick="selectDecoration('🧁')">🧁</div>
+                        <div class="decoration-item" onclick="selectDecoration('🍭')">🍭</div>
+                        <div class="decoration-item" onclick="selectDecoration('🌟')">🌟</div>
+                        <div class="decoration-item" onclick="selectDecoration('💎')">💎</div>
+                        <div class="decoration-item" onclick="selectDecoration('🎀')">🎀</div>
+                        <div class="decoration-item" onclick="selectDecoration('🌸')">🌸</div>
+                        <div class="decoration-item" onclick="selectDecoration('🦄')">🦄</div>
+                        <div class="decoration-item" onclick="selectDecoration('🎈')">🎈</div>
+                        <div class="decoration-item" onclick="selectDecoration('🎊')">🎊</div>
+                        <div class="decoration-item" onclick="selectDecoration('✨')">✨</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class CakeBuilder {
+            constructor() {
+                this.selectedLayer = null;
+                this.selectedDecoration = null;
+                this.decorations = [];
+                this.candles = [];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.showMessage('🎂 Selamat datang di Cake Builder! Klik layer kue untuk mengubah warna!');
+            }
+
+            setupEventListeners() {
+                // Layer selection
+                document.querySelectorAll('.cake-layer').forEach(layer => {
+                    layer.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.selectLayer(layer);
+                    });
+                });
+
+                // Canvas click for decoration placement
+                document.getElementById('cakeCanvas').addEventListener('click', (e) => {
+                    if (this.selectedDecoration && e.target.id === 'cakeCanvas') {
+                        this.placeDecoration(e);
+                    }
+                });
+            }
+
+            selectLayer(layer) {
+                // Remove previous selection
+                document.querySelectorAll('.cake-layer').forEach(l => {
+                    l.style.boxShadow = '';
+                });
+                
+                // Select new layer
+                layer.style.boxShadow = '0 0 20px #ff6b6b';
+                this.selectedLayer = layer;
+                this.showMessage(`Layer ${layer.dataset.layer} dipilih! Pilih warna untuk mengubahnya! 🎨`);
+            }
+
+            changeLayerColor(color) {
+                if (this.selectedLayer) {
+                    this.selectedLayer.style.background = color;
+                    this.showMessage('Warna layer berhasil diubah! ✨');
+                } else {
+                    this.showMessage('Pilih layer terlebih dahulu! 👆');
+                }
+            }
+
+            selectDecoration(decoration) {
+                // Remove previous selection
+                document.querySelectorAll('.decoration-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Select new decoration
+                event.target.classList.add('selected');
+                this.selectedDecoration = decoration;
+                this.showMessage(`${decoration} dipilih! Klik di area kue untuk menempatkannya! 🎯`);
+            }
+
+            placeDecoration(e) {
+                const canvas = document.getElementById('cakeCanvas');
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const decorationEl = document.createElement('div');
+                decorationEl.className = 'placed-decoration';
+                decorationEl.textContent = this.selectedDecoration;
+                decorationEl.style.left = x + 'px';
+                decorationEl.style.top = y + 'px';
+                
+                // Add click to remove
+                decorationEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    decorationEl.remove();
+                    this.showMessage('Dekorasi dihapus! 🗑️');
+                });
+
+                canvas.appendChild(decorationEl);
+                this.decorations.push(decorationEl);
+                this.showMessage(`${this.selectedDecoration} berhasil ditambahkan! 🎉`);
+            }
+
+            addCandles() {
+                const layers = document.querySelectorAll('.cake-layer');
+                layers.forEach((layer, index) => {
+                    // Clear existing candles on this layer
+                    layer.querySelectorAll('.candle').forEach(candle => candle.remove());
+                    
+                    // Add new candles
+                    const candleCount = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < candleCount; i++) {
+                        const candle = document.createElement('div');
+                        candle.className = 'candle';
+                        candle.style.left = `${20 + (i * 30)}px`;
+                        layer.appendChild(candle);
+                    }
+                });
+                this.showMessage('Lilin ditambahkan! 🕯️ Sekarang kue siap untuk dirayakan!');
+            }
+
+            clearCake() {
+                // Remove all decorations
+                document.querySelectorAll('.placed-decoration').forEach(decoration => {
+                    decoration.remove();
+                });
+                
+                // Remove all candles
+                document.querySelectorAll('.candle').forEach(candle => {
+                    candle.remove();
+                });
+                
+                // Reset layer colors
+                document.querySelectorAll('.cake-layer').forEach(layer => {
+                    layer.style.background = '#8B4513';
+                    layer.style.boxShadow = '';
+                });
+                
+                this.selectedLayer = null;
+                this.selectedDecoration = null;
+                this.decorations = [];
+                this.candles = [];
+                
+                this.showMessage('Kue direset! Mulai kreasi baru! 🎂');
+            }
+
+            saveCake() {
+                // Simple save simulation
+                const canvas = document.getElementById('cakeCanvas');
+                this.showMessage('Kue berhasil disimpan! 📸 (Simulasi - tekan Ctrl+S untuk screenshot asli!)');
+                
+                // Add some visual feedback
+                canvas.style.animation = 'none';
+                canvas.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    canvas.style.transform = 'scale(1)';
+                }, 300);
+            }
+
+            celebrateCake() {
+                this.showMessage('🎉 SELAMAT ULANG TAHUN! 🎉');
+                this.createConfetti();
+                
+                // Play celebration animation
+                const cake = document.getElementById('cakeBase');
+                cake.style.animation = 'bounce 1s ease-in-out';
+                
+                setTimeout(() => {
+                    cake.style.animation = '';
+                }, 1000);
+            }
+
+            createConfetti() {
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#fd79a8'];
+                
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.left = Math.random() * window.innerWidth + 'px';
+                        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        confetti.style.animationDelay = Math.random() * 2 + 's';
+                        document.body.appendChild(confetti);
+                        
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, 3000);
+                    }, i * 100);
+                }
+            }
+
+            showMessage(text) {
+                const messageEl = document.querySelector('.message') || this.createMessageElement();
+                messageEl.textContent = text;
+                messageEl.classList.add('show');
+                
+                setTimeout(() => {
+                    messageEl.classList.remove('show');
+                }, 3000);
+            }
+
+            createMessageElement() {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'message';
+                document.body.appendChild(messageEl);
+                return messageEl;
+            }
+        }
+
+        // Bounce animation for celebration
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-20px); }
+                60% { transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize the game
+        const cakeBuilder = new CakeBuilder();
+
+        // Global functions for button clicks
+        function changeLayerColor(color) {
+            cakeBuilder.changeLayerColor(color);
+        }
+
+        function selectDecoration(decoration) {
+            cakeBuilder.selectDecoration(decoration);
+        }
+
+        function addCandles() {
+            cakeBuilder.addCandles();
+        }
+
+        function clearCake() {
+            cakeBuilder.clearCake();
+        }
+
+        function saveCake() {
+            cakeBuilder.saveCake();
+        }
+
+        function celebrateCake() {
+            cakeBuilder.celebrateCake();
+        }
+    </script>
+</body>
+</html>

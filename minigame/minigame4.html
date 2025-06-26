@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle Pesan dari Vinny</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff69b4;
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        .confetti:nth-child(odd) {
+            background: #ffd700;
+            animation-delay: -0.5s;
+        }
+        
+        .confetti:nth-child(even) {
+            background: #ff1493;
+            animation-delay: -1s;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .drag-item {
+            cursor: grab;
+            transition: all 0.3s ease;
+        }
+        
+        .drag-item:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+        
+        .drop-zone {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #f59e0b;
+            background-color: #fef3c7;
+        }
+        
+        .drop-zone.filled {
+            border-color: #10b981;
+            background-color: #d1fae5;
+        }
+        
+        .card-entrance {
+            animation: cardSlideIn 0.8s ease-out;
+        }
+        
+        @keyframes cardSlideIn {
+            0% {
+                transform: translateY(50px) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .pulse-glow {
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(236, 72, 153, 0.8);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-pink-300">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-purple-800 mb-2">🧩 Puzzle Pesan dari Vinny</h1>
+            <p class="text-lg text-purple-600">Susun potongan kalimat dengan drag & drop untuk membaca pesan lengkap!</p>
+        </div>
+
+        <!-- Game Area -->
+        <div id="gameArea" class="max-w-4xl mx-auto">
+            <!-- Puzzle Pieces -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-purple-700 mb-4 text-center">Potongan Kalimat</h2>
+                <div id="puzzlePieces" class="flex flex-wrap gap-4 justify-center">
+                    <!-- Pieces will be generated here -->
+                </div>
+            </div>
+
+            <!-- Drop Zones -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-purple-700 mb-4 text-center">Susun di Sini</h2>
+                <div id="dropZones" class="space-y-3">
+                    <!-- Drop zones will be generated here -->
+                </div>
+            </div>
+
+            <!-- Check Button -->
+            <div class="text-center">
+                <button id="checkButton" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Cek Jawaban ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center card-entrance">
+                <div class="text-6xl mb-4">🎉</div>
+                <h3 class="text-2xl font-bold text-purple-800 mb-4">Selamat!</h3>
+                <div class="bg-pink-100 rounded-lg p-6 mb-6">
+                    <p id="completeMessage" class="text-lg font-medium text-purple-700 leading-relaxed"></p>
+                    <p class="text-sm text-purple-600 mt-3 italic">- Yogurt</p>
+                </div>
+                <button id="replayButton" class="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105">
+                    Main Lagi dari Awal 🔄
+                </button>
+            </div>
+        </div>
+
+        <!-- Confetti Container -->
+        <div id="confettiContainer" class="fixed inset-0 pointer-events-none z-40"></div>
+    </div>
+
+    <script>
+        class PuzzleGame {
+            constructor() {
+                this.messages = [
+                    {
+                        pieces: ["Selamat", "ulang tahun", "honey!", "Semoga", "hari-harimu", "selalu bahagia"],
+                        correct: "Selamat ulang tahun honey! Semoga hari-harimu selalu bahagia"
+                    },
+                    {
+                        pieces: ["di", "Ular", "melingkar", "umar", "pagar", "pak"],
+                        correct: "Ular melingkar di pagar pak umar"
+                    },
+                    {
+                        pieces: ["yourself", "more", "little", "Believe", "in", "a"],
+                        correct: "Believe in yourself a little more"
+                    },
+                    {
+                        pieces: ["Angin", "sore", "pelan", "damai", "yang", "membawa"],
+                        correct: "Angin pelan membawa sore yang damai"
+                    }
+                ];
+                
+                this.currentMessage = null;
+                this.shuffledPieces = [];
+                this.dropZones = [];
+                this.init();
+            }
+
+            init() {
+                this.selectRandomMessage();
+                this.createPuzzlePieces();
+                this.createDropZones();
+                this.setupEventListeners();
+            }
+
+            selectRandomMessage() {
+                const randomIndex = Math.floor(Math.random() * this.messages.length);
+                this.currentMessage = this.messages[randomIndex];
+                this.shuffledPieces = [...this.currentMessage.pieces].sort(() => Math.random() - 0.5);
+            }
+
+            createPuzzlePieces() {
+                const container = document.getElementById('puzzlePieces');
+                container.innerHTML = '';
+                
+                this.shuffledPieces.forEach((piece, index) => {
+                    const pieceEl = document.createElement('div');
+                    pieceEl.className = 'drag-item bg-pink-200 hover:bg-pink-300 p-4 rounded-xl shadow-lg border-2 border-pink-300 font-medium text-purple-800 cursor-grab select-none';
+                    pieceEl.draggable = true;
+                    pieceEl.textContent = piece;
+                    pieceEl.dataset.piece = piece;
+                    pieceEl.dataset.originalIndex = index;
+                    
+                    pieceEl.addEventListener('dragstart', this.handleDragStart.bind(this));
+                    pieceEl.addEventListener('dragend', this.handleDragEnd.bind(this));
+                    
+                    container.appendChild(pieceEl);
+                });
+            }
+
+            createDropZones() {
+                const container = document.getElementById('dropZones');
+                container.innerHTML = '';
+                
+                this.currentMessage.pieces.forEach((_, index) => {
+                    const zone = document.createElement('div');
+                    zone.className = 'drop-zone bg-white p-4 rounded-xl shadow-md min-h-16 flex items-center justify-center text-gray-400 font-medium';
+                    zone.dataset.index = index;
+                    zone.textContent = `Posisi ${index + 1}`;
+                    
+                    zone.addEventListener('dragover', this.handleDragOver.bind(this));
+                    zone.addEventListener('drop', this.handleDrop.bind(this));
+                    zone.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                    
+                    container.appendChild(zone);
+                });
+                
+                this.dropZones = Array.from(container.children);
+            }
+
+            handleDragStart(e) {
+                e.dataTransfer.setData('text/plain', e.target.dataset.piece);
+                e.dataTransfer.setData('text/index', e.target.dataset.originalIndex);
+                e.target.style.opacity = '0.5';
+            }
+
+            handleDragEnd(e) {
+                e.target.style.opacity = '1';
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                e.currentTarget.classList.add('drag-over');
+            }
+
+            handleDragLeave(e) {
+                e.currentTarget.classList.remove('drag-over');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                const zone = e.currentTarget;
+                const piece = e.dataTransfer.getData('text/plain');
+                const originalIndex = e.dataTransfer.getData('text/index');
+                
+                zone.classList.remove('drag-over');
+                zone.classList.add('filled');
+                zone.textContent = piece;
+                zone.dataset.piece = piece;
+                
+                // Remove the original piece from puzzle area
+                const originalPiece = document.querySelector(`[data-original-index="${originalIndex}"]`);
+                if (originalPiece) {
+                    originalPiece.remove();
+                }
+                
+                // Add click to remove functionality
+                zone.addEventListener('click', () => {
+                    this.returnPieceToStart(zone, piece, originalIndex);
+                });
+                
+                this.checkCompletion();
+            }
+
+            returnPieceToStart(zone, piece, originalIndex) {
+                // Return piece to puzzle area
+                const container = document.getElementById('puzzlePieces');
+                const pieceEl = document.createElement('div');
+                pieceEl.className = 'drag-item bg-pink-200 hover:bg-pink-300 p-4 rounded-xl shadow-lg border-2 border-pink-300 font-medium text-purple-800 cursor-grab select-none';
+                pieceEl.draggable = true;
+                pieceEl.textContent = piece;
+                pieceEl.dataset.piece = piece;
+                pieceEl.dataset.originalIndex = originalIndex;
+                
+                pieceEl.addEventListener('dragstart', this.handleDragStart.bind(this));
+                pieceEl.addEventListener('dragend', this.handleDragEnd.bind(this));
+                
+                container.appendChild(pieceEl);
+                
+                // Reset drop zone
+                zone.classList.remove('filled');
+                zone.textContent = `Posisi ${parseInt(zone.dataset.index) + 1}`;
+                zone.dataset.piece = '';
+                
+                // Remove click listener
+                zone.replaceWith(zone.cloneNode(true));
+                const newZone = document.querySelector(`[data-index="${zone.dataset.index}"]`);
+                newZone.addEventListener('dragover', this.handleDragOver.bind(this));
+                newZone.addEventListener('drop', this.handleDrop.bind(this));
+                newZone.addEventListener('dragleave', this.handleDragLeave.bind(this));
+            }
+
+            checkCompletion() {
+                const filledZones = this.dropZones.filter(zone => zone.dataset.piece);
+                const checkButton = document.getElementById('checkButton');
+                
+                if (filledZones.length === this.currentMessage.pieces.length) {
+                    checkButton.disabled = false;
+                    checkButton.classList.add('pulse-glow');
+                } else {
+                    checkButton.disabled = true;
+                    checkButton.classList.remove('pulse-glow');
+                }
+            }
+
+            checkAnswer() {
+                const answer = this.dropZones.map(zone => zone.dataset.piece).join(' ');
+                if (answer === this.currentMessage.correct) {
+                    this.showSuccess();
+                } else {
+                    this.showError();
+                }
+            }
+
+            showSuccess() {
+                const modal = document.getElementById('successModal');
+                const messageEl = document.getElementById('completeMessage');
+                
+                messageEl.textContent = this.currentMessage.correct;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                
+                this.createConfetti();
+            }
+
+            showError() {
+                // Simple shake animation for wrong answer
+                const gameArea = document.getElementById('gameArea');
+                gameArea.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    gameArea.style.animation = '';
+                }, 500);
+            }
+
+            createConfetti() {
+                const container = document.getElementById('confettiContainer');
+                container.innerHTML = '';
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    container.appendChild(confetti);
+                }
+                
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 5000);
+            }
+
+            setupEventListeners() {
+                document.getElementById('checkButton').addEventListener('click', () => {
+                    this.checkAnswer();
+                });
+                
+                document.getElementById('replayButton').addEventListener('click', () => {
+                    this.resetGame();
+                });
+                
+                // Close modal on background click
+                document.getElementById('successModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'successModal') {
+                        this.resetGame();
+                    }
+                });
+            }
+
+            resetGame() {
+                const modal = document.getElementById('successModal');
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                
+                document.getElementById('confettiContainer').innerHTML = '';
+                document.getElementById('checkButton').classList.remove('pulse-glow');
+                
+                this.selectRandomMessage();
+                this.createPuzzlePieces();
+                this.createDropZones();
+            }
+        }
+
+        // Add shake keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new PuzzleGame();
+        });
+    </script>
+</body>
+</html>

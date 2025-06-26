@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Kado - Minigame</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+        
+        .game-title {
+            font-size: 2.5em;
+            color: #4a5568;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .game-subtitle {
+            font-size: 1.2em;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        .level {
+            color: #9f7aea;
+        }
+        
+        .score {
+            color: #38a169;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .gift-box {
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-radius: 15px;
+            border: 3px solid #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gift-box:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gift-box:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        
+        .gift-box.opened {
+            animation: flip 0.6s ease-in-out;
+            pointer-events: none;
+        }
+        
+        .gift-box.correct {
+            background: linear-gradient(45deg, #48bb78, #68d391);
+            animation: celebrate 0.8s ease-in-out;
+        }
+        
+        .gift-box.wrong {
+            background: linear-gradient(45deg, #f56565, #fc8181);
+            animation: shake 0.6s ease-in-out;
+        }
+        
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(90deg); }
+            100% { transform: rotateY(0deg); }
+        }
+        
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1.2) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(2deg); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .message {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 20px 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(237, 242, 247, 0.8);
+        }
+        
+        .message.success {
+            color: #38a169;
+            background: rgba(72, 187, 120, 0.1);
+        }
+        
+        .message.fail {
+            color: #e53e3e;
+            background: rgba(245, 101, 101, 0.1);
+        }
+        
+        .next-level-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-weight: bold;
+        }
+        
+        .next-level-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-weight: bold;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.4);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .gift-content {
+            font-size: 0.8em;
+            line-height: 1.2;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">🎁 Find A Gift</h1>
+        <p class="game-subtitle">Temukan kado aslinya!</p>
+        
+        <div class="game-info">
+            <div class="level">Level: <span id="levelNum">1</span></div>
+            <div class="score">Skor: <span id="scoreNum">0</span></div>
+        </div>
+        
+        <div class="grid" id="gameGrid"></div>
+        
+        <div class="message" id="gameMessage">
+            Pilih salah satu kado! Hanya ada 1 kado asli 🎯
+        </div>
+        
+        <button class="next-level-btn hidden" id="nextLevelBtn" onclick="nextLevel()">
+            Level Selanjutnya 🚀
+        </button>
+        
+        <button class="reset-btn" onclick="resetGame()">
+            Mulai Ulang 🔄
+        </button>
+    </div>
+
+    <script>
+        let currentLevel = 1;
+        let score = 0;
+        let gameActive = true;
+        
+        const fakeItems = [
+            "👡 Sandal Jepit", "🍜 Mie Instan", "📱 HP Jadul", "🧦 Kaos Kaki",
+            "🧴 Sabun Mandi", "📚 Buku Resep", "🔋 Baterai ABC", "🖊️ Pulpen Bocor",
+            "🍌 Pisang Busuk", "🧻 Tissue Bekas", "💿 CD Rusak", "🔌 Charger Palsu",
+            "🍫 Coklat Expired", "🧽 Spons Cuci", "🔑 Kunci Palsu", "🍪 Biskuit Basi",
+            "📦 Kardus Kosong", "🎈 Balon Kempes", "🔧 Obeng Patah", "🧲 Magnet Lemah"
+        ];
+        
+        const successMessages = [
+            "🎉 Wah! Kamu berhasil menemukan kado asli!",
+            "🥳 Hebat! Intuisimu sangat tajam!",
+            "🌟 Luar biasa! Kado Asli berhasil ditemukan!",
+            "🎊 Perfect! Kamu memang jago!",
+            "✨ Amazing! Level selanjutnya menanti!"
+        ];
+        
+        const failMessages = [
+            "😅 Waduh! Itu bukan kado dari Vinny!",
+            "🤭 Oops! Salah pilih nih!",
+            "😋 Hehe, coba lagi ya!",
+            "🙈 Aww, belum beruntung!",
+            "😊 Jangan menyerah, coba lagi!"
+        ];
+        
+        function initializeGame() {
+            gameActive = true;
+            document.getElementById('nextLevelBtn').classList.add('hidden');
+            document.getElementById('gameMessage').className = 'message';
+            document.getElementById('gameMessage').textContent = 'Pilih salah satu kado! Hanya ada 1 kado asli dari Vinny 🎯';
+            
+            createGrid();
+        }
+        
+        function createGrid() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+            
+            // Tentukan posisi kado asli secara random
+            const correctPosition = Math.floor(Math.random() * 9);
+            
+            // Shuffle fake items untuk variasi
+            const shuffledFakeItems = [...fakeItems].sort(() => Math.random() - 0.5);
+            
+            for (let i = 0; i < 9; i++) {
+                const giftBox = document.createElement('div');
+                giftBox.className = 'gift-box';
+                giftBox.innerHTML = '🎁';
+                giftBox.onclick = () => openGift(giftBox, i === correctPosition, shuffledFakeItems[i % shuffledFakeItems.length]);
+                grid.appendChild(giftBox);
+            }
+        }
+        
+        function openGift(giftBox, isCorrect, fakeItem) {
+            if (!gameActive) return;
+            
+            gameActive = false;
+            giftBox.classList.add('opened');
+            
+            setTimeout(() => {
+                if (isCorrect) {
+                    giftBox.innerHTML = '<div class="gift-content">💝<br>Kado<br>Asli!</div>';
+                    giftBox.classList.add('correct');
+                    
+                    const message = document.getElementById('gameMessage');
+                    message.textContent = successMessages[Math.floor(Math.random() * successMessages.length)];
+                    message.classList.add('success');
+                    
+                    score += currentLevel * 10;
+                    document.getElementById('scoreNum').textContent = score;
+                    document.getElementById('nextLevelBtn').classList.remove('hidden');
+                    
+                    // Efek konfetti
+                    createConfetti();
+                } else {
+                    giftBox.innerHTML = `<div class="gift-content">${fakeItem}</div>`;
+                    giftBox.classList.add('wrong');
+                    
+                    const message = document.getElementById('gameMessage');
+                    message.textContent = failMessages[Math.floor(Math.random() * failMessages.length)] + ` Ternyata cuma ${fakeItem}! 😂`;
+                    message.classList.add('fail');
+                    
+                    setTimeout(() => {
+                        gameActive = true;
+                        initializeGame();
+                    }, 2500);
+                }
+            }, 300);
+        }
+        
+        function nextLevel() {
+            currentLevel++;
+            document.getElementById('levelNum').textContent = currentLevel;
+            initializeGame();
+        }
+        
+        function resetGame() {
+            currentLevel = 1;
+            score = 0;
+            document.getElementById('levelNum').textContent = currentLevel;
+            document.getElementById('scoreNum').textContent = score;
+            initializeGame();
+        }
+        
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b'];
+            const confettiCount = 50;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '1000';
+                confetti.style.borderRadius = '50%';
+                
+                document.body.appendChild(confetti);
+                
+                const animation = confetti.animate([
+                    { transform: 'translateY(-10px) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(100vh) rotate(720deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 2000 + 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+                
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+        
+        // Initialize game saat halaman dimuat
+        initializeGame();
+    </script>
+</body>
+</html>

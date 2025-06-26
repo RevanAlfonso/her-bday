@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polaroid for Vinny 📸</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
+        
+        body {
+            background: linear-gradient(135deg, #ffeef8 0%, #f0f8ff 50%, #e8f5e8 100%);
+            min-height: 100vh;
+            font-family: 'Caveat', cursive;
+        }
+        
+        .polaroid {
+            background: #ffffff;
+            padding: 20px 20px 60px 20px;
+            box-shadow: 
+                0 10px 30px rgba(0,0,0,0.2),
+                0 5px 15px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            transition: all 0.3s ease;
+            position: relative;
+            max-width: 400px;
+        }
+        
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.02);
+            box-shadow: 
+                0 15px 40px rgba(0,0,0,0.3),
+                0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .polaroid::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+            opacity: 0.8;
+        }
+        
+        .photo-area {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .photo-placeholder {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .photo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .polaroid-text {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            right: 20px;
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+            font-family: 'Caveat', cursive;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .decorative-tape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ddd;
+            transform: rotate(-5deg);
+        }
+        
+        .tape-1 {
+            top: -10px;
+            left: 30px;
+            width: 80px;
+            height: 25px;
+        }
+        
+        .tape-2 {
+            top: -8px;
+            right: 40px;
+            width: 60px;
+            height: 20px;
+            transform: rotate(8deg);
+        }
+        
+        .floating-hearts {
+            position: absolute;
+            top: -30px;
+            right: -20px;
+            font-size: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .sparkles {
+            position: absolute;
+            top: -20px;
+            left: -15px;
+            font-size: 16px;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+        
+        .custom-text-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #ff9a9e;
+            border-radius: 15px;
+            padding: 10px 15px;
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+            width: 100%;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .custom-text-input:focus {
+            border-color: #667eea;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .color-picker {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .color-picker:hover {
+            transform: scale(1.1);
+        }
+        
+        .cute-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 20px;
+            padding: 12px 24px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-family: 'Caveat', cursive;
+            font-size: 18px;
+        }
+        
+        .cute-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .multiple-polaroids .polaroid:nth-child(1) { transform: rotate(-3deg); }
+        .multiple-polaroids .polaroid:nth-child(2) { transform: rotate(2deg); margin-top: -50px; margin-left: 30px; }
+        .multiple-polaroids .polaroid:nth-child(3) { transform: rotate(-1deg); margin-top: -50px; margin-left: -30px; }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold mb-4" style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Polaroid Maker 📸
+            </h1>
+            <p class="text-xl text-purple-600" style="font-family: 'Dancing Script', cursive;">Buat kenangan indah di hari spesialmu!</p>
+        </div>
+        
+        <!-- Controls -->
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 mb-8 shadow-lg max-w-lg w-full">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-lg font-semibold mb-2 text-purple-700">📝 Tulis pesan di polaroid:</label>
+                    <input type="text" id="polaroidText" class="custom-text-input" placeholder="Contoh: Happy 17th Birthday Vinny! 💕" value="Happy 17th Birthday Vinny! 💕">
+                </div>
+                
+                <div>
+                    <label class="block text-lg font-semibold mb-2 text-purple-700">🎨 Pilih warna teks:</label>
+                    <div class="flex space-x-3 justify-center">
+                        <div class="color-picker" style="background: #333;" onclick="changeTextColor('#333')"></div>
+                        <div class="color-picker" style="background: #ff6b6b;" onclick="changeTextColor('#ff6b6b')"></div>
+                        <div class="color-picker" style="background: #4ecdc4;" onclick="changeTextColor('#4ecdc4')"></div>
+                        <div class="color-picker" style="background: #667eea;" onclick="changeTextColor('#667eea')"></div>
+                        <div class="color-picker" style="background: #ff9a9e;" onclick="changeTextColor('#ff9a9e')"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-lg font-semibold mb-2 text-purple-700">📷 Upload foto Vinny:</label>
+                    <input type="file" id="photoUpload" accept="image/*" class="hidden">
+                    <button onclick="document.getElementById('photoUpload').click()" class="cute-button w-full">
+                        📁 Pilih Foto
+                    </button>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button onclick="downloadPolaroid()" class="cute-button flex-1">💾 Download</button>
+                    <button onclick="addMorePolaroids()" class="cute-button flex-1" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        ➕ Tambah Polaroid
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Polaroid Container -->
+        <div id="polaroidContainer" class="flex flex-wrap justify-center gap-8">
+            <div class="polaroid" id="polaroid1">
+                <div class="decorative-tape tape-1"></div>
+                <div class="decorative-tape tape-2"></div>
+                <div class="floating-hearts">💕✨</div>
+                <div class="sparkles">⭐🌟</div>
+                
+                <div class="photo-area" onclick="document.getElementById('photoUpload').click()">
+                    <div class="photo-placeholder">
+                        <div class="text-4xl mb-2">📸</div>
+                        <div>Klik untuk upload foto Vinny</div>
+                        <div class="text-sm mt-2 opacity-70">Foto akan tampil di sini</div>
+                    </div>
+                </div>
+                
+                <div class="polaroid-text" id="textDisplay">Happy 17th Birthday Vinny! 💕</div>
+            </div>
+        </div>
+        
+        <!-- Fun Facts -->
+        <div class="mt-12 text-center max-w-md">
+            <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg">
+                <h3 class="text-2xl font-bold mb-3 text-purple-700">📚 Fun Fact tentang Polaroid!</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    Polaroid pertama kali diciptakan pada tahun 1948! Sekarang kamu bisa membuat versi digitalmu sendiri untuk kenangan indah di hari ulang tahun ke-17! 🎉
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTextColor = '#333';
+        let polaroidCount = 1;
+        
+        // Update text in real-time
+        document.getElementById('polaroidText').addEventListener('input', function() {
+            document.getElementById('textDisplay').textContent = this.value || 'Happy 17th Birthday Vinny! 💕';
+        });
+        
+        // Change text color
+        function changeTextColor(color) {
+            currentTextColor = color;
+            document.getElementById('textDisplay').style.color = color;
+        }
+        
+        // Handle photo upload
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const photoArea = document.querySelector('.photo-area');
+                    const img = new Image();
+                    img.onload = function() {
+                        photoArea.innerHTML = `<img src="${e.target.result}" alt="Vinny's Photo" class="photo-img">`;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Add more polaroids
+        function addMorePolaroids() {
+            if (polaroidCount >= 3) {
+                alert('Maksimal 3 polaroid ya! 😊');
+                return;
+            }
+            
+            polaroidCount++;
+            const container = document.getElementById('polaroidContainer');
+            container.className = 'multiple-polaroids flex flex-wrap justify-center gap-8';
+            
+            const newPolaroid = document.querySelector('.polaroid').cloneNode(true);
+            newPolaroid.id = `polaroid${polaroidCount}`;
+            
+            // Reset photo to placeholder
+            const photoArea = newPolaroid.querySelector('.photo-area');
+            photoArea.innerHTML = `
+                <div class="photo-placeholder">
+                    <div class="text-4xl mb-2">📸</div>
+                    <div>Klik untuk upload foto</div>
+                    <div class="text-sm mt-2 opacity-70">Foto akan tampil di sini</div>
+                </div>
+            `;
+            
+            // Add click handler for new photo area
+            photoArea.onclick = function() {
+                document.getElementById('photoUpload').click();
+            };
+            
+            container.appendChild(newPolaroid);
+        }
+        
+        // Download polaroid using canvas
+        function downloadPolaroid() {
+            const polaroid = document.querySelector('.polaroid');
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = 400;
+            canvas.height = 500;
+            
+            // White background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Get photo
+            const photoImg = polaroid.querySelector('.photo-img');
+            const photoArea = polaroid.querySelector('.photo-area');
+            
+            if (photoImg) {
+                // Draw photo
+                ctx.drawImage(photoImg, 20, 20, 360, 300);
+            } else {
+                // Draw placeholder
+                ctx.fillStyle = '#667eea';
+                ctx.fillRect(20, 20, 360, 300);
+                
+                // Placeholder text
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('📸', 200, 150);
+                ctx.font = '16px Arial';
+                ctx.fillText('Foto Vinny', 200, 180);
+            }
+            
+            // Draw text at bottom
+            const textElement = polaroid.querySelector('.polaroid-text');
+            const text = textElement.textContent;
+            const textColor = textElement.style.color || '#333';
+            
+            ctx.fillStyle = textColor;
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, 200, 450);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = 'vinny-polaroid.png';
+            link.href = canvas.toDataURL();
+            link.click();
+            
+            // Show success message
+            showSuccessMessage();
+        }
+        
+        function showSuccessMessage() {
+            const message = document.createElement('div');
+            message.innerHTML = '🎉 Polaroid berhasil didownload! 📸';
+            message.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 25px;
+                font-size: 18px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                animation: slideIn 0.5s ease-out;
+            `;
+            
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.style.animation = 'slideOut 0.5s ease-in forwards';
+                setTimeout(() => message.remove(), 500);
+            }, 3000);
+        }
+        
+        // Welcome animation
+        setTimeout(() => {
+            document.querySelector('.polaroid').style.animation = 'none';
+        }, 2000);
+        
+        // Add some sparkle effects
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                const sparkle = document.createElement('div');
+                sparkle.textContent = ['✨', '⭐', '💫', '🌟'][Math.floor(Math.random() * 4)];
+                sparkle.style.position = 'fixed';
+                sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.fontSize = '20px';
+                sparkle.style.animation = 'sparkle 2s ease-out forwards';
+                sparkle.style.zIndex = '1000';
+                
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => sparkle.remove(), 2000);
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch The Love 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 800px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            border-radius: 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: none;
+        }
+
+        @media (min-width: 768px) {
+            .game-container {
+                width: 800px;
+                height: 600px;
+                border-radius: 20px;
+                border: 5px solid #fff;
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            opacity: 0.7;
+            border-radius: 50%;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(700px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .game-header {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 100;
+        }
+
+        @media (min-width: 768px) {
+            .game-header {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                font-size: 18px;
+            }
+        }
+
+        .score, .timer {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+        }
+
+        @media (min-width: 768px) {
+            .score, .timer {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+        }
+
+        .basket {
+            position: absolute;
+            bottom: 30px;
+            width: 60px;
+            height: 45px;
+            background: linear-gradient(45deg, #ff6b9d, #ff8a80);
+            border-radius: 15px 15px 5px 5px;
+            border: 3px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: left 0.1s ease;
+            z-index: 10;
+        }
+
+        .basket::before {
+            content: '🎁';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .basket {
+                bottom: 50px;
+                width: 80px;
+                height: 60px;
+            }
+            
+            .basket::before {
+                font-size: 30px;
+            }
+        }
+
+        .falling-item {
+            position: absolute;
+            font-size: 24px;
+            animation: fallItem linear;
+            z-index: 5;
+        }
+
+        @media (min-width: 768px) {
+            .falling-item {
+                font-size: 30px;
+            }
+        }
+
+        @keyframes fallItem {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: none;
+        }
+
+        .game-over h2 {
+            color: #c44569;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .game-over p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .start-screen h1 {
+            color: #c44569;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .start-screen h1 {
+                font-size: 36px;
+            }
+        }
+
+        .instructions {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 90%;
+            line-height: 1.6;
+            font-size: 14px;
+            padding: 0 20px;
+        }
+
+        @media (min-width: 768px) {
+            .instructions {
+                max-width: 500px;
+                font-size: 16px;
+                padding: 0;
+            }
+        }
+
+        .controls {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 12px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        @media (min-width: 768px) {
+            .controls {
+                font-size: 14px;
+                padding: 0;
+            }
+        }
+
+        /* Touch Controls */
+        .touch-controls {
+            position: absolute;
+            bottom: 120px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 100;
+        }
+
+        .touch-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.3);
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+            user-select: none;
+            touch-action: manipulation;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .touch-btn:active,
+        .touch-btn:hover {
+            background: rgba(255,255,255,0.5);
+            transform: scale(0.95);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        /* Alternative swipe controls */
+        .swipe-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .swipe-area.active {
+            pointer-events: all;
+        }
+            position: absolute;
+            pointer-events: none;
+            z-index: 50;
+            animation: heartFloat 1s ease-out forwards;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(1.5);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Background Confetti -->
+        <div class="confetti" style="left: 10%; animation-duration: 8s; animation-delay: 0s;"></div>
+        <div class="confetti" style="left: 20%; animation-duration: 6s; animation-delay: 1s;"></div>
+        <div class="confetti" style="left: 30%; animation-duration: 7s; animation-delay: 2s;"></div>
+        <div class="confetti" style="left: 40%; animation-duration: 9s; animation-delay: 0.5s;"></div>
+        <div class="confetti" style="left: 50%; animation-duration: 5s; animation-delay: 1.5s;"></div>
+        <div class="confetti" style="left: 60%; animation-duration: 8s; animation-delay: 2.5s;"></div>
+        <div class="confetti" style="left: 70%; animation-duration: 6s; animation-delay: 0.8s;"></div>
+        <div class="confetti" style="left: 80%; animation-duration: 7s; animation-delay: 3s;"></div>
+        <div class="confetti" style="left: 90%; animation-duration: 9s; animation-delay: 1.2s;"></div>
+
+        <!-- Game Header -->
+        <div class="game-header">
+            <div class="score">Skor: <span id="score">0</span></div>
+            <div class="timer">Waktu: <span id="timer">60</span>s</div>
+        </div>
+
+        <!-- Basket -->
+        <div class="basket" id="basket"></div>
+
+        <!-- Touch Controls for Mobile -->
+        <div class="touch-controls" id="touchControls">
+            <div class="touch-btn" id="leftBtn">←</div>
+            <div class="touch-btn" id="rightBtn">→</div>
+        </div>
+
+        <!-- Swipe Area for Alternative Control -->
+        <div class="swipe-area" id="swipeArea"></div>
+
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <h1>💖 Catch The Love 💖</h1>
+            <div class="instructions">
+                <p><strong>Cara Bermain:</strong></p>
+                <p>Tangkap item cinta (💖 hati & 🌹 bunga) untuk mendapat poin!</p>
+                <p>Hindari item jebakan (🧄 bawang & 🌶️ cabai rawit) yang mengurangi poin!</p>
+                <p>Kumpulkan skor setinggi mungkin dalam 60 detik!</p>
+            </div>
+            <div class="controls">
+                Gunakan tombol ← → atau A/D untuk menggerakkan keranjang<br>
+                <span style="font-size: 10px; color: #aaa;">(Di HP: gunakan tombol panah di layar)</span>
+            </div>
+            <button class="btn" onclick="startGame()">Mulai Bermain</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div class="game-over" id="gameOver">
+            <h2 id="gameOverTitle">Permainan Selesai!</h2>
+            <p id="finalScore">Skor Akhir: 0</p>
+            <p id="gameOverMessage">Coba lagi untuk skor yang lebih tinggi!</p>
+            <button class="btn" onclick="restartGame()">Main Lagi</button>
+        </div>
+    </div>
+
+    <script>
+        const gameContainer = document.querySelector('.game-container');
+        const basket = document.getElementById('basket');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const startScreen = document.getElementById('startScreen');
+        const gameOver = document.getElementById('gameOver');
+        const gameOverTitle = document.getElementById('gameOverTitle');
+        const finalScore = document.getElementById('finalScore');
+        const gameOverMessage = document.getElementById('gameOverMessage');
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const touchControls = document.getElementById('touchControls');
+        const swipeArea = document.getElementById('swipeArea');
+
+        let gameState = {
+            score: 0,
+            timeLeft: 60,
+            basketPosition: 160,
+            gameRunning: false,
+            items: [],
+            gameInterval: null,
+            timerInterval: null,
+            spawnInterval: null,
+            gameWidth: 0
+        };
+
+        const items = {
+            love: ['💖', '🌹'],
+            trap: ['🧄', '🌶️']
+        };
+
+        const itemValues = {
+            '💖': 10,
+            '🌹': 15,
+            '🧄': -5,
+            '🌶️': -8
+        };
+
+        // Initialize game dimensions and basket position
+        function initializeGame() {
+            gameState.gameWidth = gameContainer.offsetWidth;
+            gameState.basketPosition = (gameState.gameWidth - 60) / 2; // Center the basket
+            basket.style.left = gameState.basketPosition + 'px';
+        }
+
+        // Initialize on load and resize
+        window.addEventListener('load', initializeGame);
+        window.addEventListener('resize', initializeGame);
+
+        // Touch controls with multiple event types
+        function handleLeftMove(e) {
+            e.preventDefault();
+            if (gameState.gameRunning) moveBasket(-25);
+        }
+
+        function handleRightMove(e) {
+            e.preventDefault();
+            if (gameState.gameRunning) moveBasket(25);
+        }
+
+        // Add multiple event listeners for better compatibility
+        leftBtn.addEventListener('touchstart', handleLeftMove, { passive: false });
+        leftBtn.addEventListener('mousedown', handleLeftMove);
+        leftBtn.addEventListener('click', handleLeftMove);
+
+        rightBtn.addEventListener('touchstart', handleRightMove, { passive: false });
+        rightBtn.addEventListener('mousedown', handleRightMove);
+        rightBtn.addEventListener('click', handleRightMove);
+
+        // Continuous movement on hold
+        let moveInterval = null;
+        let isMoving = false;
+
+        function startContinuousMove(direction) {
+            if (isMoving) return;
+            isMoving = true;
+            moveBasket(direction);
+            moveInterval = setInterval(() => {
+                if (gameState.gameRunning) moveBasket(direction);
+            }, 100);
+        }
+
+        function stopContinuousMove() {
+            isMoving = false;
+            if (moveInterval) {
+                clearInterval(moveInterval);
+                moveInterval = null;
+            }
+        }
+
+        // Enhanced touch controls
+        leftBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startContinuousMove(-20);
+        }, { passive: false });
+
+        leftBtn.addEventListener('touchend', stopContinuousMove, { passive: false });
+        leftBtn.addEventListener('touchcancel', stopContinuousMove, { passive: false });
+
+        rightBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startContinuousMove(20);
+        }, { passive: false });
+
+        rightBtn.addEventListener('touchend', stopContinuousMove, { passive: false });
+        rightBtn.addEventListener('touchcancel', stopContinuousMove, { passive: false });
+
+        // Add swipe controls as backup
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        swipeArea.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: false });
+
+        swipeArea.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (!gameState.gameRunning) return;
+            
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            const deltaX = touchX - touchStartX;
+            const deltaY = touchY - touchStartY;
+            
+            // Only respond to horizontal swipes
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+                if (deltaX > 0) {
+                    moveBasket(15); // Move right
+                } else {
+                    moveBasket(-15); // Move left
+                }
+                touchStartX = touchX; // Update for continuous movement
+            }
+        }, { passive: false });
+
+        // Show debug info for mobile
+        function showTouchDebug(message) {
+            console.log('Touch Debug:', message);
+            // You can uncomment this to show debug on screen
+            // const debug = document.createElement('div');
+            // debug.style.position = 'fixed';
+            // debug.style.top = '10px';
+            // debug.style.left = '10px';
+            // debug.style.background = 'rgba(0,0,0,0.8)';
+            // debug.style.color = 'white';
+            // debug.style.padding = '5px';
+            // debug.style.zIndex = '9999';
+            // debug.textContent = message;
+            // document.body.appendChild(debug);
+            // setTimeout(() => debug.remove(), 2000);
+        }
+
+        // Initialize basket position
+        initializeGame();
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (!gameState.gameRunning) return;
+            
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                moveBasket(-20);
+            } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                moveBasket(20);
+            }
+        });
+
+        function moveBasket(direction) {
+            const basketWidth = window.innerWidth >= 768 ? 80 : 60;
+            gameState.basketPosition = Math.max(10, Math.min(gameState.gameWidth - basketWidth - 10, gameState.basketPosition + direction));
+            basket.style.left = gameState.basketPosition + 'px';
+        }
+
+        function createFallingItem() {
+            const isLove = Math.random() < 0.7; // 70% chance for love items
+            const itemType = isLove ? 'love' : 'trap';
+            const itemArray = items[itemType];
+            const itemEmoji = itemArray[Math.floor(Math.random() * itemArray.length)];
+            
+            const item = document.createElement('div');
+            item.className = 'falling-item';
+            item.textContent = itemEmoji;
+            item.style.left = Math.random() * (gameState.gameWidth - 50) + 'px';
+            item.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            
+            gameContainer.appendChild(item);
+            gameState.items.push({
+                element: item,
+                emoji: itemEmoji,
+                caught: false
+            });
+
+            // Remove item after animation
+            setTimeout(() => {
+                if (item.parentNode) {
+                    item.remove();
+                }
+            }, 5000);
+        }
+
+        function checkCollisions() {
+            gameState.items.forEach((item, index) => {
+                if (item.caught) return;
+                
+                const itemRect = item.element.getBoundingClientRect();
+                const basketRect = basket.getBoundingClientRect();
+                
+                // Check if item is at basket level and overlapping
+                if (itemRect.bottom >= basketRect.top && 
+                    itemRect.bottom <= basketRect.bottom + 20 &&
+                    itemRect.left < basketRect.right - 10 &&
+                    itemRect.right > basketRect.left + 10) {
+                    
+                    item.caught = true;
+                    const points = itemValues[item.emoji];
+                    gameState.score = Math.max(0, gameState.score + points);
+                    scoreElement.textContent = gameState.score;
+                    
+                    // Create heart particle effect for love items
+                    if (points > 0) {
+                        createHeartParticle(basketRect.left + basketRect.width / 2, basketRect.top);
+                    }
+                    
+                    // Remove the caught item
+                    item.element.remove();
+                    gameState.items.splice(index, 1);
+                }
+            });
+        }
+
+        function createHeartParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'heart-particle';
+            particle.textContent = '💖';
+            particle.style.left = (x - gameContainer.getBoundingClientRect().left) + 'px';
+            particle.style.top = (y - gameContainer.getBoundingClientRect().top) + 'px';
+            particle.style.fontSize = '20px';
+            
+            gameContainer.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 1000);
+        }
+
+        function updateTimer() {
+            gameState.timeLeft--;
+            timerElement.textContent = gameState.timeLeft;
+            
+            if (gameState.timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        function startGame() {
+            startScreen.style.display = 'none';
+            touchControls.style.display = 'flex';
+            swipeArea.classList.add('active');
+            gameState.gameRunning = true;
+            gameState.score = 0;
+            gameState.timeLeft = 60;
+            gameState.items = [];
+            
+            // Update game dimensions
+            gameState.gameWidth = gameContainer.offsetWidth;
+            gameState.basketPosition = (gameState.gameWidth - (window.innerWidth >= 768 ? 80 : 60)) / 2;
+            
+            scoreElement.textContent = gameState.score;
+            timerElement.textContent = gameState.timeLeft;
+            basket.style.left = gameState.basketPosition + 'px';
+            
+            // Clear any existing items
+            document.querySelectorAll('.falling-item').forEach(item => item.remove());
+            
+            // Show touch debug
+            showTouchDebug('Game started - touch controls active');
+            
+            // Start game loops
+            gameState.spawnInterval = setInterval(createFallingItem, 1000);
+            gameState.gameInterval = setInterval(checkCollisions, 50);
+            gameState.timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function endGame() {
+            gameState.gameRunning = false;
+            
+            // Clear intervals
+            clearInterval(gameState.spawnInterval);
+            clearInterval(gameState.gameInterval);
+            clearInterval(gameState.timerInterval);
+            
+            // Show game over screen
+            finalScore.textContent = `Skor Akhir: ${gameState.score}`;
+            
+            if (gameState.score >= 100) {
+                gameOverTitle.textContent = '🎉 Luar Biasa! 🎉';
+                gameOverMessage.textContent = 'Kamu ahli menangkap cinta!';
+            } else if (gameState.score >= 50) {
+                gameOverTitle.textContent = '💖 Bagus Sekali! 💖';
+                gameOverMessage.textContent = 'Cinta sudah mulai tertangkap!';
+            } else {
+                gameOverTitle.textContent = '💔 Coba Lagi! 💔';
+                gameOverMessage.textContent = 'Jangan menyerah, cinta masih menunggu!';
+            }
+            
+            gameOver.style.display = 'block';
+        }
+
+        function restartGame() {
+            gameOver.style.display = 'none';
+            
+            // Clear any remaining items
+            document.querySelectorAll('.falling-item').forEach(item => item.remove());
+            document.querySelectorAll('.heart-particle').forEach(particle => particle.remove());
+            
+            startGame();
+        }
+
+        // Prevent zoom on mobile
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Add continuous confetti animation
+        function animateConfetti() {
+            const confettiElements = document.querySelectorAll('.confetti');
+            confettiElements.forEach((confetti, index) => {
+                confetti.style.backgroundColor = `hsl(${Math.random() * 60 + 300}, 70%, 80%)`;
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+            });
+        }
+
+        // Initialize confetti animation
+        setInterval(animateConfetti, 3000);
+        animateConfetti();
+    </script>
+</body>
+</html>
