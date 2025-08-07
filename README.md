@@ -12,7 +12,7 @@ Template open-source berbasis HTML untuk membuat halaman ucapan ulang tahun inte
 - 💻 100% berbasis HTML/CSS/JS (tanpa framework)
 
 ## 🔧 Cara Menggunakan
-## ✨ Bagian yang Perlu Disesuaikan
+## ✨ Bagian yang Perlu Disesuaikan - Bagian index.js
 
 Berikut adalah bagian-bagian yang bisa/harus kamu ubah untuk menyesuaikan templat ini dengan orang yang ingin kamu beri kejutan ulang tahun.
 
