@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Vinny! 💕</title>
+    <title>Happy Birthday [Nama Kamu]! 💕</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <audio id="bgMusic" loop preload="auto">
         <source src="./music/w2e.mp3" type="audio/mpeg">
@@ -258,7 +258,7 @@
             <div class="text-center max-w-2xl mx-auto">
                 <div class="mb-8">
                     <h1 class="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-4 heart-float">
-                        🎉 PINGNI 🎉
+                        🎉 [Nama Kamu] 🎉
                     </h1>
                     <h2 class="text-3xl md:text-4xl font-semibold text-purple-800 mb-6">
                         SWEET SEVENTEEN! 💕
@@ -286,7 +286,7 @@
                 </div>
                 
                 <div class="text-center">
-                    <p class="text-purple-700 text-lg mb-4">🎵 With dari Revan 🎵</p>
+                    <p class="text-purple-700 text-lg mb-4">🎵 With dari [Nama Kamu] 🎵</p>
                     <div class="flex justify-center space-x-2">
                         <span class="music-note text-2xl">🎵</span>
                         <span class="music-note text-2xl" style="animation-delay: 0.5s;">🎶</span>
@@ -319,7 +319,7 @@ const bgMusic = document.getElementById('bgMusic');
             
             // Start welcome sequence
             setTimeout(() => {
-                showNotification('Selamat datang di pesta ulang tahun Vinny! 🎉');
+                showNotification('Selamat datang di pesta ulang tahun [Nama Kamu]! 🎉');
                 showCelebration();
             }, 500);
         });
@@ -376,7 +376,7 @@ const bgMusic = document.getElementById('bgMusic');
                     { sender: 'sanzu', text: 'Khusus buat kamu.', delay: 1200 },
                     { sender: 'sanzu', text: 'Gue sempet mikir, kenapa juga harus gue?', delay: 2000 },
                     { sender: 'sanzu', text: 'Tapi ya... katanya ini harus disampaikan langsung.', delay: 2800 },
-                    { sender: 'sanzu', text: 'Vinny.', delay: 3600 },
+                    { sender: 'sanzu', text: '[Nama Kamu].', delay: 3600 },
                     { sender: 'sanzu', text: 'Ulang tahun kamu, ya?', delay: 4200 },
                     { sender: 'sanzu', text: '...selamat ulang tahun.', delay: 5000 }
                 ],
@@ -407,7 +407,7 @@ const bgMusic = document.getElementById('bgMusic');
                     { sender: 'sanzu', text: 'Atau karena kamu terlalu nyaman buat dilupain.', delay: 1300 },
                     { sender: 'sanzu', text: 'Tapi ya... lo bukan buat gue, kan?', delay: 2100 },
                     { sender: 'sanzu', text: 'Bos udah pesen dari awal:', delay: 2800 },
-                    { sender: 'sanzu', text: '"Khusus hari ini, Vinny harus senyum duluan."', delay: 3600 }
+                    { sender: 'sanzu', text: '"Khusus hari ini, [Nama Kamu] harus senyum duluan."', delay: 3600 }
                 ],
                 continue2: [
                     { sender: 'sanzu', text: 'Serius lah.', delay: 600 },
@@ -415,7 +415,7 @@ const bgMusic = document.getElementById('bgMusic');
                     { sender: 'sanzu', text: 'Atau karena kamu terlalu nyaman buat dilupain.', delay: 1800 },
                     { sender: 'sanzu', text: 'Tapi ya... lo bukan buat gue, kan?', delay: 2600 },
                     { sender: 'sanzu', text: 'Bos udah pesen dari awal:', delay: 3200 },
-                    { sender: 'sanzu', text: '"Khusus hari ini, Vinny harus senyum duluan."', delay: 4000 }
+                    { sender: 'sanzu', text: '"Khusus hari ini, [Nama Kamu] harus senyum duluan."', delay: 4000 }
                 ],
                 choices: [
                     { text: 'Sapehal tu "Bos"?', response: 'reveal' },
@@ -449,7 +449,7 @@ const bgMusic = document.getElementById('bgMusic');
                         <div class="w-8 h-8 rounded-full overflow-hidden border border-purple-300 flex-shrink-0">
                             <img src="./img/mainpp.jpeg" alt="Sanzu" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div class="w-full h-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xs font-bold" style="display: none;">
-                                S
+                                Y
                             </div>
                         </div>
                         <div class="chat-bubble bg-purple-200 text-purple-900 px-4 py-3 rounded-2xl rounded-tl-md shadow-md max-w-xs">
@@ -552,7 +552,7 @@ const bgMusic = document.getElementById('bgMusic');
             choiceContainer.style.display = 'none';
             
             // Add user's choice as a message first
-            const userMessage = createMessage('vinny', userChoice);
+            const userMessage = createMessage('[Nama Kamu]', userChoice);
             userMessage.style.animationDelay = '0s';
             chatContainer.appendChild(userMessage);
             chatContainer.scrollTop = chatContainer.scrollHeight;

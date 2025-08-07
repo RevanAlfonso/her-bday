@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy 17th Birthday Vinny! 🎉</title>
+    <title>Happy 17th Birthday [Nama Kamu]! 🎉</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <audio id="bgMusic" autoplay loop preload="auto">
         <source src="./music/daniel.mp3" type="audio/mpeg">
@@ -412,8 +412,8 @@
         <div class="polaroid-placeholder">
             <div>
                 <!-- <div class="text-2xl mb-2"><img src="./✧.jpeg" alt=""></div>
-                <div>Foto Cantik<br>Vinny</div> -->
-                <img src="./img/special.jpg" alt="">
+                <div>Foto Cantik<br>[Nama Kamu]</div> -->
+                <img src="./img/special.jpeg" alt="">
             </div>
         </div>
         <div class="polaroid-caption">My Pookies Wookies 💕</div>
@@ -424,7 +424,7 @@
             <div>
                 <!-- <div class="text-2xl mb-2">🌟</div>
                 <div>Moment<br>Spesial</div> -->
-                <img src="./img/special2.jpg" alt="">
+                <img src="./img/special2.jpeg" alt="">
             </div>
         </div>
         <div class="polaroid-caption">Birthday Princess ✨</div>
@@ -538,7 +538,7 @@
     <!-- Footer -->
     <footer class="text-center py-12">
         <div class="text-3xl mb-4 bounce-slow">🌟</div>
-        <p class="dancing-script text-2xl text-purple-600 mb-2">Dibuat dengan 💖 khusus untuk Vinny tersayang</p>
+        <p class="dancing-script text-2xl text-purple-600 mb-2">Dibuat dengan 💖 khusus untuk [Nama Kamu] tersayang</p>
         <p class="text-sm text-gray-600 mb-4">Semoga hari ke-17 ini menjadi yang terbaik dalam hidupmu!</p>
         <div class="flex justify-center space-x-2 text-2xl">
             <span class="emoji-click" onclick="showCelebration()">🎊</span>
@@ -569,7 +569,7 @@
             
             // Start welcome sequence
             setTimeout(() => {
-                showNotification('Selamat datang di pesta ulang tahun Vinny! 🎉');
+                showNotification('Selamat datang di pesta ulang tahun [Nama Kamu]! 🎉');
                 showCelebration();
             }, 500);
         });
@@ -646,7 +646,7 @@
             for (let i = 0; i < 5; i++) {
                 createParticle(emoji, Math.random() * window.innerWidth, Math.random() * 200);
             }
-            showNotification(`${emoji} untuk Vinny!`);
+            showNotification(`${emoji} untuk [Nama Kamu]!`);
         }
         
         // Polaroid interaction
@@ -654,14 +654,14 @@
             const content = side === 'left' ? 
                 `<div class="text-center">
                     <div class="text-4xl mb-4">📸</div>
-                    <h2 class="text-2xl font-bold mb-4 rainbow-text">Foto Cantik Vinny</h2>
-                    <p class="text-gray-600 mb-4">Foto ini menunjukkan betapa cantiknya senyum Vinny! ✨</p>
+                    <h2 class="text-2xl font-bold mb-4 rainbow-text">Foto Cantik [Nama Kamu]</h2>
+                    <p class="text-gray-600 mb-4">Foto ini menunjukkan betapa cantiknya senyum [Nama Kamu]! ✨</p>
                     <p class="dancing-script text-lg text-pink-600">My Sweet Girl 💕</p>
                 </div>` :
                 `<div class="text-center">
                     <div class="text-4xl mb-4">🌟</div>
                     <h2 class="text-2xl font-bold mb-4 rainbow-text">Moment Spesial</h2>
-                    <p class="text-gray-600 mb-4">Setiap moment dengan Vinny selalu spesial dan tak terlupakan! 🎉</p>
+                    <p class="text-gray-600 mb-4">Setiap moment dengan [Nama Kamu] selalu spesial dan tak terlupakan! 🎉</p>
                     <p class="dancing-script text-lg text-pink-600">Birthday Princess ✨</p>
                 </div>`;
             
@@ -683,9 +683,9 @@
             showPopup(`
                 <div class="text-center max-w-lg">
                     <div class="text-4xl mb-4">💌</div>
-                    <h2 class="text-2xl font-bold mb-4 rainbow-text">Surat Cinta Untuk Vinny</h2>
+                    <h2 class="text-2xl font-bold mb-4 rainbow-text">Surat Cinta Untuk [Nama Kamu]</h2>
                     <div class="text-left space-y-3 text-gray-700">
-                        <p class="dancing-script text-lg text-pink-600">Vinny sayang,</p>
+                        <p class="dancing-script text-lg text-pink-600">[Nama Kamu] sayang,</p>
                         <p>Di hari ulang tahun ke-17 yang istimewa ini, aku ingin kamu tahu betapa berharganya kamu! 🌟</p>
                         <p>Kamu seperti sinar matahari yang menerangi setiap hari, seperti bintang yang bersinar di langit malam! ✨</p>
                         <p>Semoga di usia 17 ini kamu terus tumbuh menjadi pribadi yang luar biasa dan meraih semua impian! 💕</p>
@@ -836,7 +836,7 @@
         
         // Welcome sequence
         setTimeout(() => {
-            showNotification('Selamat datang di pesta ulang tahun Vinny! 🎉');
+            showNotification('Selamat datang di pesta ulang tahun [Nama Kamu]! 🎉');
             showCelebration();
         }, 1000);
         
