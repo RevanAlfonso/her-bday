@@ -247,7 +247,7 @@
         ];
         
         const failMessages = [
-            "😅 Waduh! Itu bukan kado dari Vinny!",
+            "😅 Waduh! Itu bukan kado dari [Nama Kamu]!",
             "🤭 Oops! Salah pilih nih!",
             "😋 Hehe, coba lagi ya!",
             "🙈 Aww, belum beruntung!",
@@ -258,7 +258,7 @@
             gameActive = true;
             document.getElementById('nextLevelBtn').classList.add('hidden');
             document.getElementById('gameMessage').className = 'message';
-            document.getElementById('gameMessage').textContent = 'Pilih salah satu kado! Hanya ada 1 kado asli dari Vinny 🎯';
+            document.getElementById('gameMessage').textContent = 'Pilih salah satu kado! Hanya ada 1 kado asli dari [Nama Kamu] 🎯';
             
             createGrid();
         }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polaroid for Vinny 📸</title>
+    <title>Polaroid for [Nama Kamu] 📸</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -214,7 +214,7 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-lg font-semibold mb-2 text-purple-700">📝 Tulis pesan di polaroid:</label>
-                    <input type="text" id="polaroidText" class="custom-text-input" placeholder="Contoh: Happy 17th Birthday Vinny! 💕" value="Happy 17th Birthday Vinny! 💕">
+                    <input type="text" id="polaroidText" class="custom-text-input" placeholder="Contoh: Happy 17th Birthday [Nama Kamu]! 💕" value="Happy 17th Birthday [Nama Kamu]! 💕">
                 </div>
                 
                 <div>
@@ -229,7 +229,7 @@
                 </div>
                 
                 <div>
-                    <label class="block text-lg font-semibold mb-2 text-purple-700">📷 Upload foto Vinny:</label>
+                    <label class="block text-lg font-semibold mb-2 text-purple-700">📷 Upload foto [Nama Kamu]:</label>
                     <input type="file" id="photoUpload" accept="image/*" class="hidden">
                     <button onclick="document.getElementById('photoUpload').click()" class="cute-button w-full">
                         📁 Pilih Foto
@@ -256,12 +256,12 @@
                 <div class="photo-area" onclick="document.getElementById('photoUpload').click()">
                     <div class="photo-placeholder">
                         <div class="text-4xl mb-2">📸</div>
-                        <div>Klik untuk upload foto Vinny</div>
+                        <div>Klik untuk upload foto [Nama Kamu]</div>
                         <div class="text-sm mt-2 opacity-70">Foto akan tampil di sini</div>
                     </div>
                 </div>
                 
-                <div class="polaroid-text" id="textDisplay">Happy 17th Birthday Vinny! 💕</div>
+                <div class="polaroid-text" id="textDisplay">Happy 17th Birthday [Nama Kamu]! 💕</div>
             </div>
         </div>
         
@@ -282,7 +282,7 @@
         
         // Update text in real-time
         document.getElementById('polaroidText').addEventListener('input', function() {
-            document.getElementById('textDisplay').textContent = this.value || 'Happy 17th Birthday Vinny! 💕';
+            document.getElementById('textDisplay').textContent = this.value || 'Happy 17th Birthday [Nama Kamu]! 💕';
         });
         
         // Change text color
@@ -300,7 +300,7 @@
                     const photoArea = document.querySelector('.photo-area');
                     const img = new Image();
                     img.onload = function() {
-                        photoArea.innerHTML = `<img src="${e.target.result}" alt="Vinny's Photo" class="photo-img">`;
+                        photoArea.innerHTML = `<img src="${e.target.result}" alt="[Nama Kamu]'s Photo" class="photo-img">`;
                     };
                     img.src = e.target.result;
                 };
@@ -372,7 +372,7 @@
                 ctx.textAlign = 'center';
                 ctx.fillText('📸', 200, 150);
                 ctx.font = '16px Arial';
-                ctx.fillText('Foto Vinny', 200, 180);
+                ctx.fillText('Foto [Nama Kamu]', 200, 180);
             }
             
             // Draw text at bottom
@@ -387,7 +387,7 @@
             
             // Download
             const link = document.createElement('a');
-            link.download = 'vinny-polaroid.png';
+            link.download = '[Nama Kamu]-polaroid.png';
             link.href = canvas.toDataURL();
             link.click();
             
